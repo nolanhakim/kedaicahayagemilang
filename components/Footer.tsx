@@ -94,9 +94,16 @@ export const Footer = () => {
               &copy; 2026 Kedai Cahaya Gemilang, Spesialis Nasi Ayam.
             </p>
             <div className="flex items-center space-x-2 text-xs sm:text-sm text-gray-400">
-              <span>Dibuat dengan</span>
-              <span className="text-red-500 animate-pulse">❤</span>
-              <span>di Malang</span>
+              <span>Dibuat </span>
+              <a
+  href="https://www.instagram.com/catranolanhkm?igsh=NTMzZjVteWp2dWdm&utm_source=qr"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <span className="text-red-500 animate-pulse hover:underline">
+    Nul
+  </span>
+</a>
             </div>
           </div>
         </div>
