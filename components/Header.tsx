@@ -18,7 +18,7 @@ export const Header = () => {
   }, []);
 
   const navItems = [
-    { href: '#home', label: 'Beranda' },
+    { href: 'https://www.kedai-cahayagemilang.my.id/', label: 'Beranda' },
     { href: '#about', label: 'Tentang Kami' },
     { href: '#menu', label: 'Menu' },
     { href: '#delivery', label: 'Pesan Online' },
