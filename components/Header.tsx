@@ -30,7 +30,7 @@ export const Header = () => {
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all ${isSticky ? 'bg-white shadow-md' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto px-4">
         <nav className="flex items-center justify-between py-4">
-          <a href="#" className="text-2xl font-bold text-orange-600">
+          <a href="https://www.kedai-cahayagemilang.my.id/" className="text-2xl font-bold text-orange-600">
             Kedai <span className="text-gray-800">Cahaya Gemilang</span>
           </a>
           
