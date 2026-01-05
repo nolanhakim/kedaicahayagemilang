@@ -77,14 +77,14 @@ export const Menu = () => {
     },
     {
       name: "Nasi Ayam Chili Padi",
-      desc: "Nasi kulit ayam dengan chili padi bercita rasa gurih, asin dan pedas menyengat",
+      desc: "Ayam crispy renyah dengan chili padi bercita rasa gurih, asin dan pedas menyengat",
       price: 20000,
       gradient: "from-neutral-700 to-neutral-900",
       img: "img/makanan/"
     },
     {
       name: "Nasi Ayam Chili Oil",
-      desc: "Nasi kulit ayam dengan chili oil bercita rasa gurih, asin dan pedas aromatik",
+      desc: "Ayam crispy renyah dengan chili oil bercita rasa gurih, asin dan pedas aromatik",
       price: 20000,
       gradient: "from-neutral-700 to-neutral-900",
       img: "img/makanan/"
