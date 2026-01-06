@@ -309,21 +309,21 @@ export const Menu = () => {
       price: 3000,
       badge: "Best Seller",
       gradient: "from-yellow-400 to-amber-500",
-      img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400"
+      img: ""
     },
     {
       name: "Cireng",
       desc: "Aci digoreng khas Sunda yang kenyal di luar dan lembut di dalam.",
       price: 12000,
       gradient: "from-yellow-400 to-amber-500",
-      img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400"
+      img: ""
     },
     {
       name: "Siomay Ayam",
       desc: "Siomay ayam lembut dengan saus kacang spesial dan jeruk nipis.",
       price: 13000,
       gradient: "from-yellow-400 to-amber-500",
-      img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400"
+      img: ""
     },
     {
       name: "Kentang Goreng",
@@ -331,14 +331,14 @@ export const Menu = () => {
       price: 13000,
       badge: "Popular",
       gradient: "from-yellow-400 to-amber-500",
-      img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400"
+      img: ""
     },
     {
       name: "Bakso Goreng",
       desc: "Bakso sapi goreng crispy dengan saus sambal khas.",
       price: 13000,
       gradient: "from-yellow-400 to-amber-500",
-      img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400"
+      img: ""
     },
     {
       name: "Chicken Nuggets",
@@ -346,7 +346,7 @@ export const Menu = () => {
       price: 15000,
       badge: "Kids Favorite",
       gradient: "from-orange-400 to-red-400",
-      img: "https://images.unsplash.com/photo-1562967914-608f82629710?w=400"
+      img: ""
     },
     {
       name: "Tahu Cabe Garam",
@@ -354,7 +354,7 @@ export const Menu = () => {
       price: 15000,
       badge: "Spicy",
       gradient: "from-orange-400 to-red-400",
-      img: "https://images.unsplash.com/photo-1562967914-608f82629710?w=400"
+      img: ""
     },
     {
       name: "Spicy Wings",
@@ -362,14 +362,14 @@ export const Menu = () => {
       price: 16000,
       badge: "Spicy",
       gradient: "from-orange-400 to-red-400",
-      img: "https://images.unsplash.com/photo-1562967914-608f82629710?w=400"
+      img: ""
     },
     {
       name: "BBQ Wings",
       desc: "Sayap ayam dengan saus BBQ manis dan smokey.",
       price: 16000,
       gradient: "from-orange-400 to-red-400",
-      img: "https://images.unsplash.com/photo-1562967914-608f82629710?w=400"
+      img: ""
     },
     {
       name: "Cheese Wings",
@@ -377,7 +377,7 @@ export const Menu = () => {
       price: 16000,
       badge: "Cheesy",
       gradient: "from-orange-400 to-red-400",
-      img: "https://images.unsplash.com/photo-1562967914-608f82629710?w=400"
+      img: ""
     },
     {
       name: "Mix Platter",
@@ -385,7 +385,7 @@ export const Menu = () => {
       price: 25000,
       badge: "Sharing",
       gradient: "from-orange-400 to-red-400",
-      img: "https://images.unsplash.com/photo-1562967914-608f82629710?w=400"
+      img: ""
     },
   ];
 
