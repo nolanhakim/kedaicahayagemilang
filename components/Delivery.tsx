@@ -130,7 +130,7 @@ export const Delivery = () => {
           <div className="grid grid-cols-3 gap-8 md:gap-12">
             {steps.map((s, i) => (
               <div key={i} className="flex flex-col gap-3">
-                <span className="font-serif font-bold text-4xl md:text-5xl text-stone-100 leading-none select-none">
+                <span className="font-serif font-bold text-4xl md:text-5xl text-stone-900 leading-none select-none">
                   {s.number}
                 </span>
                 <div className="w-6 h-px bg-orange-500" />
