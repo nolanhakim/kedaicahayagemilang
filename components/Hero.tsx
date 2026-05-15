@@ -1,167 +1,193 @@
 "use client";
-import React from "react";
-import { ChevronDown } from "lucide-react";
+import React, { useEffect, useRef } from "react";
 
 export const Hero = () => {
+  const bgRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = bgRef.current;
+    if (!el) return;
+    const handleScroll = () => {
+      el.style.transform = `translateY(${window.scrollY * 0.4}px)`;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <section
-      id="home"
-      className="
-        relative
-        min-h-screen
-        flex items-center justify-center
-        bg-cover bg-center
-      "
-      style={{
-        backgroundImage: "url('/img/bg.jpg')",
-      }}
-    >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30" />
+    <section id="home" className="relative min-h-svh grid grid-rows-[1fr_auto] overflow-hidden bg-[#FDFAF7] font-sans">
 
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center text-white py-20 sm:py-0">
+      {/* ── Parallax Background ── */}
+      <div
+        ref={bgRef}
+        className="absolute inset-0 bg-[url('/img/bg.jpg')] bg-cover bg-center will-change-transform"
+        style={{ inset: "-20%" }}
+      />
 
+      {/* Gradient overlay */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(160deg, rgba(26,18,8,0.78) 0%, rgba(26,18,8,0.52) 50%, rgba(232,82,26,0.25) 100%)",
+        }}
+      />
 
-        {/* Main Heading */}
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 drop-shadow-2xl leading-tight animate-fade-in-up px-4">
-          Spesialis{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400">
-            Nasi Ayam
+      {/* Decorative vertical rule */}
+      <div className="absolute top-0 left-24 w-px h-full bg-white/10 z-10 hidden md:block" />
+
+      {/* Decorative orb rings */}
+      <div className="absolute -top-20 -right-20 w-[500px] h-[500px] rounded-full border border-orange-500/15 z-10 hidden lg:block">
+        <div className="absolute inset-[60px] rounded-full border border-orange-500/10" />
+      </div>
+
+      {/* ── Main Content ── */}
+      <div className="relative z-20 flex flex-col justify-center min-h-svh px-6 md:pl-24 md:pr-12 pt-20 pb-10 max-w-4xl">
+
+        {/* Eyebrow */}
+        <div
+          className="inline-flex items-center gap-2.5 mb-8"
+          style={{ animation: "fadeUp 0.7s ease both" }}
+        >
+          <div className="w-8 h-px bg-orange-500" />
+          <span className="text-[11px] font-medium tracking-[0.18em] uppercase text-white/65">
+            Malang · Jawa Timur
           </span>
+        </div>
+
+        {/* Heading */}
+        <h1
+          className="font-serif font-black leading-none tracking-tight text-white mb-7"
+          style={{
+            fontSize: "clamp(3.2rem, 7vw, 6.5rem)",
+            animation: "fadeUp 0.7s 0.1s ease both",
+            opacity: 0,
+            animationFillMode: "forwards",
+          }}
+        >
+          Spesialis
+          <br />
+          <em className="not-italic text-orange-400">Nasi Ayam</em>
         </h1>
 
-        {/* Subtitle */}
-        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-200 px-4">
-          Nikmati kelezatan nasi ayam dengan resep turun temurun dan cita rasa istimewa
+        {/* Description */}
+        <p
+          className="text-white/70 font-light leading-relaxed max-w-md mb-12"
+          style={{
+            fontSize: "clamp(0.95rem, 1.5vw, 1.15rem)",
+            animation: "fadeUp 0.7s 0.2s ease both",
+            opacity: 0,
+            animationFillMode: "forwards",
+          }}
+        >
+          Nikmati kelezatan nasi ayam dengan resep turun temurun
+          dan cita rasa istimewa yang telah dipercaya bertahun‑tahun.
         </p>
 
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 sm:mb-16 animate-fade-in-up animation-delay-400 px-4">
+        {/* CTA Row */}
+        <div
+          className="flex items-center flex-wrap gap-5"
+          style={{
+            animation: "fadeUp 0.7s 0.3s ease both",
+            opacity: 0,
+            animationFillMode: "forwards",
+          }}
+        >
+          {/* Primary button — arrow shape via clip-path */}
           <a
             href="#menu"
-            className="
-              w-full sm:w-auto
-              inline-flex items-center justify-center gap-2
-              bg-gradient-to-r from-orange-500 to-yellow-500
-              text-white
-              px-8 sm:px-10 py-3 sm:py-4
-              rounded-full
-              text-sm sm:text-base
-              font-semibold
-              shadow-xl
-              hover:scale-105 hover:shadow-2xl
-              transition-all duration-300
-              transform
-            "
+            className="inline-flex items-center gap-2.5 bg-orange-600 hover:bg-orange-500 text-white text-sm font-medium tracking-wide pl-7 pr-10 py-3.5 transition-all duration-200 hover:translate-x-1"
+            style={{
+              clipPath:
+                "polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%)",
+            }}
           >
             Lihat Menu
-            <ChevronDown size={20} className="animate-bounce" />
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
           </a>
+
+          {/* Secondary button */}
           <a
             href="#about"
-            className="
-              w-full sm:w-auto
-              inline-flex items-center justify-center gap-2
-              bg-white/10 backdrop-blur-md
-              border-2 border-white/30
-              text-white
-              px-8 sm:px-10 py-3 sm:py-4
-              rounded-full
-              text-sm sm:text-base
-              font-semibold
-              hover:bg-white/20
-              transition-all duration-300
-            "
+            className="inline-flex items-center gap-2 text-white/75 hover:text-white text-sm tracking-wide border-b border-white/25 hover:border-white/60 pb-0.5 transition-all duration-200"
           >
             Tentang Kami
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M7 17L17 7M17 7H7M17 7v10" />
+            </svg>
           </a>
         </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-2 xs:gap-3 sm:gap-6 md:gap-8 max-w-3xl mx-auto animate-fade-in-up animation-delay-600 px-4">
-          <div className="bg-white/10 backdrop-blur-md rounded-lg xs:rounded-xl sm:rounded-2xl p-2 xs:p-3 sm:p-6 border border-white/20">
-            <div className="text-lg xs:text-xl sm:text-3xl md:text-4xl font-bold text-orange-400 mb-0.5 xs:mb-1 sm:mb-2">15+</div>
-            <div className="text-[10px] xs:text-xs sm:text-sm text-white/80">Menu Varian</div>
-          </div>
-          <div className="bg-white/10 backdrop-blur-md rounded-lg xs:rounded-xl sm:rounded-2xl p-2 xs:p-3 sm:p-6 border border-white/20">
-            <div className="text-lg xs:text-xl sm:text-3xl md:text-4xl font-bold text-orange-400 mb-0.5 xs:mb-1 sm:mb-2">4.6★</div>
-            <div className="text-[10px] xs:text-xs sm:text-sm text-white/80">Rating</div>
-          </div>
-          <div className="bg-white/10 backdrop-blur-md rounded-lg xs:rounded-xl sm:rounded-2xl p-2 xs:p-3 sm:p-6 border border-white/20">
-            <div className="text-lg xs:text-xl sm:text-3xl md:text-4xl font-bold text-orange-400 mb-0.5 xs:mb-1 sm:mb-2">100%</div>
-            <div className="text-[10px] xs:text-xs sm:text-sm text-white/80">Halal</div>
-          </div>
-        </div>
       </div>
 
-      {/* Scroll Indicator - Hidden on mobile */}
-      <div className="hidden sm:block absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <ChevronDown className="text-white/60" size={32} />
+      {/* Scroll pip */}
+      <div
+        className="absolute right-12 bottom-10 z-20 hidden md:flex flex-col items-center gap-1.5 text-white/35 text-[10px] tracking-[0.14em] uppercase"
+        style={{
+          writingMode: "vertical-lr",
+          animation: "fadeIn 1s 0.8s ease both",
+          opacity: 0,
+          animationFillMode: "forwards",
+        }}
+      >
+        <span
+          className="w-px bg-white/20"
+          style={{
+            height: "48px",
+            display: "block",
+            animation: "scrollLine 1.8s 1.2s ease infinite",
+          }}
+        />
+        scroll
       </div>
 
-      {/* Decorative Elements */}
-      <div className="absolute top-20 left-10 w-32 h-32 sm:w-48 sm:h-48 bg-orange-500/20 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-20 right-10 w-40 h-40 sm:w-64 sm:h-64 bg-yellow-500/20 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
+      {/* ── Stats Strip ── */}
+      <div
+        className="relative z-20 grid grid-cols-3 md:grid-cols-3 border-t border-white/10"
+        style={{
+          animation: "fadeUp 0.7s 0.45s ease both",
+          opacity: 0,
+          animationFillMode: "forwards",
+        }}
+      >
+        {[
+          { number: "15", suffix: "+", label: "Menu Varian" },
+          { number: "4.6", suffix: "★", label: "Rating" },
+          { number: "100", suffix: "%", label: "Halal" },
+        ].map((stat, i, arr) => (
+          <div
+            key={stat.label}
+            className={`flex flex-col gap-1 px-6 py-7 md:px-8 ${i < arr.length - 1 ? "border-r border-white/10" : ""
+              }`}
+          >
+            <div className="font-serif font-bold text-[2rem] leading-none text-white">
+              {stat.number}
+              <span className="text-orange-400">{stat.suffix}</span>
+            </div>
+            <div className="text-[11px] font-normal tracking-[0.12em] uppercase text-white/40">
+              {stat.label}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Global keyframes */}
+      <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(18px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        @keyframes scrollLine {
+          0%   { transform: scaleY(0); transform-origin: top;    opacity: 0; }
+          50%  { transform: scaleY(1);                           opacity: 1; }
+          100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+        }
+      `}</style>
     </section>
   );
 };
-
-// Add these CSS animations to your global styles
-const styles = `
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.8s ease-out;
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.8s ease-out;
-}
-
-.animation-delay-200 {
-  animation-delay: 0.2s;
-  opacity: 0;
-  animation-fill-mode: forwards;
-}
-
-.animation-delay-400 {
-  animation-delay: 0.4s;
-  opacity: 0;
-  animation-fill-mode: forwards;
-}
-
-.animation-delay-600 {
-  animation-delay: 0.6s;
-  opacity: 0;
-  animation-fill-mode: forwards;
-}
-
-.animation-delay-1000 {
-  animation-delay: 1s;
-}
-`;
-
-if (typeof document !== 'undefined') {
-  const styleSheet = document.createElement("style");
-  styleSheet.textContent = styles;
-  document.head.appendChild(styleSheet);
-}

@@ -1,55 +1,31 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
-import { MapPin, Phone, Clock, Wifi, Instagram, Navigation, Car, Bike, ChevronRight, Sparkles } from 'lucide-react';
+import React, { useState, useEffect, useRef } from "react";
+import { MapPin, Phone, Clock, Wifi, Instagram, Navigation, Car, Bike } from "lucide-react";
+
+/* ── useInView helper ── */
+function useInView(threshold = 0.15) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setInView(true); },
+      { threshold }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return { ref, inView };
+}
 
 export const Location = () => {
-  const [activeTab, setActiveTab] = useState<'info' | 'hours'>('info');
-  const [isInView, setIsInView] = useState({
-    header: false,
-    leftSide: false,
-    map: false,
-    banner: false
-  });
+  const [activeTab, setActiveTab] = useState<"info" | "hours">("info");
 
-  const headerRef = useRef<HTMLDivElement>(null);
-  const leftSideRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<HTMLDivElement>(null);
-  const bannerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observerOptions = {
-      threshold: 0.2,
-      rootMargin: '0px'
-    };
-
-    const createObserver = (key: keyof typeof isInView) => {
-      return new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setIsInView(prev => ({ ...prev, [key]: true }));
-          }
-        },
-        observerOptions
-      );
-    };
-
-    const headerObserver = createObserver('header');
-    const leftSideObserver = createObserver('leftSide');
-    const mapObserver = createObserver('map');
-    const bannerObserver = createObserver('banner');
-
-    if (headerRef.current) headerObserver.observe(headerRef.current);
-    if (leftSideRef.current) leftSideObserver.observe(leftSideRef.current);
-    if (mapRef.current) mapObserver.observe(mapRef.current);
-    if (bannerRef.current) bannerObserver.observe(bannerRef.current);
-
-    return () => {
-      headerObserver.disconnect();
-      leftSideObserver.disconnect();
-      mapObserver.disconnect();
-      bannerObserver.disconnect();
-    };
-  }, []);
+  const header = useInView(0.2);
+  const left = useInView(0.15);
+  const map = useInView(0.15);
+  const banner = useInView(0.2);
 
   const contactInfo = [
     {
@@ -57,260 +33,241 @@ export const Location = () => {
       title: "Alamat",
       content: "Jl. J.A. Suprapto II No.58, Rampal Celaket, Kec. Klojen, Kota Malang, Jawa Timur 65112",
       link: "https://maps.app.goo.gl/dW5Dg1zdFdTZHyCW9",
-      color: "from-red-500 to-pink-500"
     },
     {
       icon: Phone,
       title: "Telepon",
-      content: "0895327436647",
+      content: "0895 3274 36647",
       link: "tel:0895327436647",
-      color: "from-green-500 to-emerald-500"
     },
     {
       icon: Instagram,
       title: "Instagram",
       content: "@kedaicahayagemilang",
       link: "https://www.instagram.com/kedai.cahayagemilang?igsh=c3o2cGtyY2hnODV1",
-      color: "from-purple-500 to-pink-500"
-    }
-  ];
-
-  const operatingHours = [
-    { day: "Senin - Minggu", hours: "10.00 - 21.30 WIB", status: "open" },
+    },
   ];
 
   const facilities = [
     { icon: Wifi, text: "Free WiFi" },
-    { icon: Bike, text: "Akses Mudah" }
+    { icon: Bike, text: "Akses Mudah" },
+    { icon: Car, text: "Parkir Tersedia" },
+    { icon: Clock, text: "Buka Tiap Hari" },
   ];
 
-  const directions = [
-    {
-      icon: Car,
-      title: "Dengan Kendaraan",
-      desc: "15 menit dari pusat kota Malang"
-    }
-  ];
+  const fadeUp = (inView: boolean) =>
+    `transition-all duration-700 ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`;
+  const fadeLeft = (inView: boolean) =>
+    `transition-all duration-700 delay-100 ${inView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"}`;
+  const fadeRight = (inView: boolean) =>
+    `transition-all duration-700 delay-200 ${inView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"}`;
 
   return (
-    <section id="location" className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-white via-orange-50 to-white relative overflow-hidden">
-      {/* Background Decoration */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 left-0 w-64 h-64 sm:w-96 sm:h-96 bg-orange-400 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-64 h-64 sm:w-96 sm:h-96 bg-red-400 rounded-full blur-3xl" />
+    <section
+      id="location"
+      className="py-20 md:py-28 bg-[#FDFAF7] relative overflow-hidden font-sans"
+    >
+      {/* Vertical rules */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-24 w-px h-full bg-stone-200 hidden md:block" />
+        <div className="absolute top-0 right-24 w-px h-full bg-stone-200 hidden md:block" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-        {/* Header */}
-        <div 
-          ref={headerRef}
-          className={`text-center mb-10 sm:mb-12 md:mb-16 transition-all duration-1000 ${
-            isInView.header ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
-        >
-          <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-600 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold mb-3 sm:mb-4">
-            <Sparkles size={14} className="sm:w-4 sm:h-4" />
-            Temukan Kami
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-3 sm:mb-4 px-4">
-            Lokasi{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-500">
-              Kedai
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+
+        {/* ── Header ── */}
+        <div ref={header.ref} className={`mb-16 md:mb-20 ${fadeUp(header.inView)}`}>
+          <div className="inline-flex items-center gap-2.5 mb-5">
+            <div className="w-8 h-px bg-orange-500" />
+            <span className="text-[11px] font-medium tracking-[0.18em] uppercase text-stone-400">
+              Temukan Kami
             </span>
+          </div>
+          <h2 className="font-serif font-black text-stone-900 leading-none tracking-tight text-4xl md:text-5xl lg:text-6xl mb-4">
+            Lokasi <em className="not-italic text-orange-500">Kedai</em>
           </h2>
-          <p className="text-gray-600 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-4">
-            Kunjungi kedai kami dan rasakan langsung kehangatan pelayanan kami
+          <p className="text-stone-500 font-light text-base max-w-md leading-relaxed">
+            Kunjungi kedai kami dan rasakan langsung kehangatan pelayanan serta cita rasa istimewa.
           </p>
         </div>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-12">
-          {/* Left Side - Info */}
-          <div 
-            ref={leftSideRef}
-            className={`space-y-4 sm:space-y-6 transition-all duration-1000 delay-200 ${
-              isInView.leftSide ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
-            }`}
-          >
+        {/* ── Main Grid ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-16 md:mb-20">
+
+          {/* Left — Info Panel */}
+          <div ref={left.ref} className={`flex flex-col gap-6 ${fadeLeft(left.inView)}`}>
+
             {/* Tabs */}
-            <div className="bg-white rounded-xl sm:rounded-2xl p-1.5 sm:p-2 shadow-md inline-flex w-full sm:w-auto">
-              <button
-                onClick={() => setActiveTab('info')}
-                className={`flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all duration-300 ${
-                  activeTab === 'info'
-                    ? 'bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-md'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                Informasi
-              </button>
-              <button
-                onClick={() => setActiveTab('hours')}
-                className={`flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all duration-300 ${
-                  activeTab === 'hours'
-                    ? 'bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-md'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                Jam Buka
-              </button>
+            <div className="flex border-b border-stone-200">
+              {(["info", "hours"] as const).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-6 py-3 text-sm font-medium tracking-wide border-b-2 -mb-px transition-all duration-200 ${activeTab === tab
+                      ? "border-orange-500 text-orange-600"
+                      : "border-transparent text-stone-400 hover:text-stone-700"
+                    }`}
+                >
+                  {tab === "info" ? "Informasi" : "Jam Buka"}
+                </button>
+              ))}
             </div>
 
-            {/* Tab Content */}
-            {activeTab === 'info' ? (
-              <div className="space-y-3 sm:space-y-4">
-                {contactInfo.map((info, idx) => (
+            {/* Tab: Info */}
+            {activeTab === "info" && (
+              <div className="flex flex-col gap-px bg-stone-200 border border-stone-200">
+                {contactInfo.map((info, i) => (
                   <a
-                    key={idx}
+                    key={i}
                     href={info.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group block bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-orange-100 hover:border-orange-300 hover:-translate-y-1"
+                    className="group flex items-start gap-4 bg-[#FDFAF7] hover:bg-stone-900 px-6 py-5 transition-all duration-200"
                   >
-                    <div className="flex items-start gap-3 sm:gap-4">
-                      <div className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br ${info.color} rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300`}>
-                        <info.icon className="text-white" size={24} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-xs sm:text-sm font-semibold text-gray-500 mb-1">{info.title}</h4>
-                        <p className="text-sm sm:text-base text-gray-900 font-medium group-hover:text-orange-600 transition-colors break-words">
-                          {info.content}
-                        </p>
-                      </div>
-                      <ChevronRight className="text-gray-400 group-hover:text-orange-600 group-hover:translate-x-1 transition-all flex-shrink-0" size={20} />
+                    <div className="w-9 h-9 border border-orange-500 group-hover:border-white flex items-center justify-center flex-shrink-0 mt-0.5 transition-colors duration-200">
+                      <info.icon size={15} className="text-orange-500 group-hover:text-white transition-colors duration-200" />
                     </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[10px] font-medium tracking-[0.14em] uppercase text-stone-400 group-hover:text-white/50 mb-1 transition-colors duration-200">
+                        {info.title}
+                      </p>
+                      <p className="text-sm text-stone-800 group-hover:text-white leading-snug break-words transition-colors duration-200">
+                        {info.content}
+                      </p>
+                    </div>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-stone-300 group-hover:text-white/40 flex-shrink-0 mt-1 transition-colors duration-200">
+                      <path d="M7 17L17 7M17 7H7M17 7v10" />
+                    </svg>
                   </a>
                 ))}
               </div>
-            ) : (
-              <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-md border border-orange-100">
-                <div className="space-y-3 sm:space-y-4">
-                  {operatingHours.map((schedule, idx) => (
-                    <div key={idx} className="flex items-center justify-between py-2 sm:py-3 border-b border-gray-100 last:border-b-0">
-                      <div className="flex items-center gap-2 sm:gap-3">
-                        <Clock className="text-orange-500 flex-shrink-0" size={18} />
-                        <span className="text-sm sm:text-base font-medium text-gray-900">{schedule.day}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className={`text-xs sm:text-base font-semibold ${
-                          schedule.status === 'open' ? 'text-green-600' : 'text-red-600'
-                        }`}>
-                          {schedule.hours}
-                        </span>
-                        {schedule.status === 'open' && (
-                          <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                        )}
-                      </div>
+            )}
+
+            {/* Tab: Hours */}
+            {activeTab === "hours" && (
+              <div className="border border-stone-200 bg-white">
+                <div className="flex items-center justify-between px-6 py-5 border-b border-stone-100">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 border border-orange-500 flex items-center justify-center">
+                      <Clock size={15} className="text-orange-500" />
                     </div>
-                  ))}
+                    <div>
+                      <p className="text-[10px] font-medium tracking-[0.14em] uppercase text-stone-400 mb-0.5">Jam Operasional</p>
+                      <p className="text-sm font-medium text-stone-900">Senin – Minggu</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-serif font-bold text-lg text-stone-900">10.00 – 21.30</p>
+                    <p className="text-[10px] tracking-widest uppercase text-stone-400">WIB</p>
+                  </div>
+                </div>
+                <div className="px-6 py-4 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-xs text-green-600 font-medium tracking-wide">Buka setiap hari</span>
                 </div>
               </div>
             )}
 
             {/* Facilities */}
-            <div className="bg-gradient-to-r from-orange-500 to-yellow-500 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg">
-              <h3 className="text-white font-bold text-base sm:text-lg mb-3 sm:mb-4">Fasilitas Tersedia</h3>
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                {facilities.map((facility, idx) => (
-                  <div key={idx} className="bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 text-center hover:bg-white/30 transition-all duration-300">
-                    <facility.icon className="text-white mx-auto mb-2" size={24} />
-                    <p className="text-white text-xs sm:text-sm font-medium">{facility.text}</p>
+            <div>
+              <p className="text-[11px] font-medium tracking-[0.16em] uppercase text-stone-400 mb-4">Fasilitas</p>
+              <div className="grid grid-cols-2 gap-px bg-stone-200 border border-stone-200">
+                {facilities.map((f, i) => (
+                  <div key={i} className="flex items-center gap-3 bg-[#FDFAF7] px-5 py-4">
+                    <f.icon size={14} className="text-orange-500 flex-shrink-0" />
+                    <span className="text-xs font-medium text-stone-700">{f.text}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Directions */}
-            <div className="grid grid-cols-1 gap-3 sm:gap-4">
-              {directions.map((direction, idx) => (
-                <div key={idx} className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-md border border-orange-100 hover:shadow-lg transition-all duration-300">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-100 rounded-lg sm:rounded-xl flex items-center justify-center mb-3 sm:mb-4">
-                    <direction.icon className="text-orange-600" size={20} />
-                  </div>
-                  <h4 className="font-bold text-gray-900 mb-2 text-sm sm:text-base">{direction.title}</h4>
-                  <p className="text-gray-600 text-xs sm:text-sm">{direction.desc}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* CTA Button */}
-            <a 
-              href="https://maps.app.goo.gl/dW5Dg1zdFdTZHyCW9" 
+            {/* Direction CTA */}
+            <a
+              href="https://maps.app.goo.gl/dW5Dg1zdFdTZHyCW9"
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center justify-center gap-2 sm:gap-3 w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-sm sm:text-base font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              className="inline-flex items-center gap-2.5 bg-orange-600 hover:bg-orange-500 text-white text-sm font-medium tracking-wide pl-6 pr-10 py-3.5 self-start transition-all duration-200 hover:translate-x-1"
+              style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%)" }}
             >
-              <Navigation size={20} className="group-hover:rotate-45 transition-transform duration-300" />
+              <Navigation size={15} />
               Dapatkan Petunjuk Arah
-              <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
 
-          {/* Right Side - Map */}
-          <div 
-            ref={mapRef}
-            className={`space-y-3 sm:space-y-4 order-first lg:order-last transition-all duration-1000 delay-400 ${
-              isInView.map ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
-            }`}
-          >
-            <div className="rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl h-64 sm:h-96 lg:h-[600px] border-2 sm:border-4 border-white relative group">
-              <iframe 
+          {/* Right — Map */}
+          <div ref={map.ref} className={`flex flex-col gap-4 order-first lg:order-last ${fadeRight(map.inView)}`}>
+            {/* Map embed */}
+            <div className="overflow-hidden border border-stone-200 flex-1 min-h-[320px] lg:min-h-0">
+              <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3951.3015412825744!2d112.61740167401022!3d-7.967756492057121!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd6298baf844ccb%3A0x16d57bf14e899f8f!2sKedai%20Cahaya%20Gemilang!5e0!3m2!1sid!2sid!4v1748222219543!5m2!1sid!2sid"
-                className="w-full h-full"
+                className="w-full h-72 lg:h-[480px]"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
 
-            {/* Quick Info Cards */}
-            <div className="grid grid-cols-2 gap-3 sm:gap-4">
-              <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-md border border-orange-100 text-center">
-                <p className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-500 mb-1">
-                  15 min
-                </p>
-                <p className="text-xs sm:text-sm text-gray-600">Dari Pusat Kota</p>
+            {/* Quick stats */}
+            <div className="grid grid-cols-2 gap-px bg-stone-200 border border-stone-200">
+              <div className="bg-[#FDFAF7] px-6 py-5 text-center">
+                <p className="font-serif font-bold text-2xl text-stone-900 mb-0.5">15 mnt</p>
+                <p className="text-[10px] tracking-[0.12em] uppercase text-stone-400">Dari Pusat Kota</p>
               </div>
-              <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-md border border-orange-100 text-center">
-                <p className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-500 mb-1">
-                  4.6★
-                </p>
-                <p className="text-xs sm:text-sm text-gray-600">Rating Google</p>
+              <div className="bg-[#FDFAF7] px-6 py-5 text-center">
+                <p className="font-serif font-bold text-2xl text-stone-900 mb-0.5">4.6<span className="text-orange-500">★</span></p>
+                <p className="text-[10px] tracking-[0.12em] uppercase text-stone-400">Rating Google</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Banner */}
-        <div 
-          ref={bannerRef}
-          className={`bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-12 shadow-xl border-2 border-orange-100 text-center transition-all duration-1000 ${
-            isInView.banner ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-          }`}
-        >
-          <MapPin className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-4 sm:mb-6 text-orange-500" />
-          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4 px-4">
-            Belum Pernah Berkunjung?
-          </h3>
-          <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
-            Kami tunggu kedatangan Anda di kedai kami. Nikmati suasana hangat dan cita rasa istimewa yang tak terlupakan!
-          </p>
-          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4 px-4">
-            <a 
-              href="#menu" 
-              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-6 sm:px-8 py-3 rounded-full text-sm sm:text-base font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-            >
-              Lihat Menu
-              <ChevronRight size={18} className="sm:w-5 sm:h-5" />
-            </a>
-            <a 
-              href="tel:0895327436647" 
-              className="inline-flex items-center justify-center gap-2 bg-white text-orange-600 border-2 border-orange-500 px-6 sm:px-8 py-3 rounded-full text-sm sm:text-base font-bold hover:bg-orange-50 transition-all duration-300"
-            >
-              <Phone size={18} className="sm:w-5 sm:h-5" />
-              Hubungi Kami
-            </a>
+        {/* ── Bottom Banner ── */}
+        <div ref={banner.ref} className={`border border-stone-200 bg-white ${fadeUp(banner.inView)}`}>
+          <div className="grid grid-cols-1 md:grid-cols-2">
+            {/* Copy */}
+            <div className="p-8 md:p-12 border-b md:border-b-0 md:border-r border-stone-200">
+              <div className="w-10 h-10 border border-orange-500 flex items-center justify-center mb-6">
+                <MapPin size={18} className="text-orange-500" />
+              </div>
+              <h3 className="font-serif font-bold text-2xl md:text-3xl text-stone-900 leading-snug mb-3">
+                Belum Pernah <em className="not-italic text-orange-500">Berkunjung?</em>
+              </h3>
+              <p className="text-stone-400 font-light text-sm leading-relaxed max-w-xs">
+                Kami tunggu kedatangan Anda. Nikmati suasana hangat dan cita rasa istimewa yang tak terlupakan.
+              </p>
+            </div>
+
+            {/* CTAs */}
+            <div className="p-8 md:p-12 flex flex-col justify-center gap-4">
+              <a
+                href="#menu"
+                className="flex items-center gap-4 border border-stone-200 hover:border-orange-500 bg-white hover:bg-orange-600 px-6 py-4 transition-all duration-200 group"
+              >
+                <div className="w-8 h-8 border border-orange-500 group-hover:border-white flex items-center justify-center flex-shrink-0 transition-colors duration-200">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-orange-500 group-hover:text-white transition-colors duration-200">
+                    <path d="M3 6h18M3 12h18M3 18h18" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-[10px] text-stone-400 group-hover:text-white/60 tracking-widest uppercase transition-colors">Jelajahi</p>
+                  <p className="text-sm font-medium text-stone-900 group-hover:text-white transition-colors">Lihat Menu</p>
+                </div>
+              </a>
+              <a
+                href="tel:0895327436647"
+                className="flex items-center gap-4 border border-stone-200 hover:border-stone-900 bg-white hover:bg-stone-900 px-6 py-4 transition-all duration-200 group"
+              >
+                <div className="w-8 h-8 border border-stone-300 group-hover:border-white flex items-center justify-center flex-shrink-0 transition-colors duration-200">
+                  <Phone size={13} className="text-stone-500 group-hover:text-white transition-colors duration-200" />
+                </div>
+                <div>
+                  <p className="text-[10px] text-stone-400 group-hover:text-white/60 tracking-widest uppercase transition-colors">Hubungi</p>
+                  <p className="text-sm font-medium text-stone-900 group-hover:text-white transition-colors">0895 3274 36647</p>
+                </div>
+              </a>
+            </div>
           </div>
         </div>
+
       </div>
     </section>
   );
